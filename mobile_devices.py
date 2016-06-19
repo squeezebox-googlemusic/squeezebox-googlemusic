@@ -20,7 +20,7 @@ def main():
     for device in api.get_registered_devices():
         print '%s | %s | %s | %s' % (device['name'],
                                      device.get('manufacturer'),
-                                     device['type'],
+                                     device['model'],
                                      device['id'])
 
     api.logout()
