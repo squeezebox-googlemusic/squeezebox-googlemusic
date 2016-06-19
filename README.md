@@ -29,7 +29,7 @@ Development setup (Deb-based Linux)
 -------------------------
 *First install the required libraries*
 ```
-sudo pip install gmusicapi
+sudo pip2 install gmusicapi==10.0.1  #depening on your installed python version, you might have to use pip
 sudo apt-get install python-dev
 sudo cpan App::cpanminus
 sudo cpanm --notest Inline
