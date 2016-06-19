@@ -159,20 +159,13 @@ Usage
 1. You will find the plug-in in the 'My Apps' section of the
    squeezebox menu.
 
-Donate for this	Plugin
+Donate for this Plugin
 ----------------------
 
-If you are enjoying this plugin feel free to
+This plugin was originally written by hechtus. If you are enjoying this plugin feel free to
 [donate](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=Z2KE8W5HW9F8W)
-for it.
+to him.
 
-Project resources
------------------
-
-* [Source code](https://github.com/hechtus/squeezebox-googlemusic)
-* [Issue tracker](https://github.com/hechtus/squeezebox-googlemusic/issues)
-* [Current development snapshot](https://github.com/hechtus/squeezebox-googlemusic/archive/master.zip)
-* [Releases](https://github.com/hechtus/squeezebox-googlemusic/releases)
 
 ToDo
 ----
@@ -180,7 +173,7 @@ ToDo
 I'm looking forward to your help. Feel free to
 [contribute](https://help.github.com/articles/fork-a-repo) or to
 [report
-bugs](https://github.com/hechtus/squeezebox-googlemusic/issues). Here
+bugs](https://github.com/squeezebox-googlemusic/squeezebox-googlemusic/issues). Here
 are some things you may help on:
 
 * Get this plugin running on non-Linux systems
