@@ -25,6 +25,31 @@ Dev Resources
 * http://forums.slimdevices.com/showthread.php?98526-Google-Music-Plugin
 * https://github.com/hechtus/squeezebox-googlemusic/issues
 
+Development setup (Deb-based Linux)
+-------------------------
+*First install the required libraries*
+```
+sudo pip install gmusicapi
+sudo apt-get install python-dev
+sudo cpan App::cpanminus
+sudo cpanm --notest Inline
+sudo cpanm --notest Inline::Python
+```
+*then configure permissions and clone the repo*
+```
+sudo addgroup squeezeboxserver
+sudo adduser YOURUSERNAME squeezeboxserver
+# Now log out and log back in again, or do something like `sudo su YOURUSEFNAME`
+cd /var/lib/squeezeboxserver/Plugins
+sudo mkdir GoogleMusic
+sudo chgrp squeezeboxserver GoogleMusic
+sudo chmod g+wx GoogleMusic
+cd GoogleMusic
+git clone https://github.com/squeezebox-googlemusic/squeezebox-googlemusic.git .  #don't forget the dot at the end
+sudo service logitechmediaserver restart
+```
+
+
 Installation
 ------------
 
