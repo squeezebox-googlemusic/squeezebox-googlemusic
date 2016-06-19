@@ -228,7 +228,7 @@ sub search {
 	};		  
 
 	eval {
-		$googleResult = $googleapi->search_all_access($query, $prefs->get('max_search_items'));
+		$googleResult = $googleapi->search($query, $prefs->get('max_search_items'));
 	};
 	if ($@) {
 		$log->error("Not able to search All Access for \"$query\": $@");
@@ -260,7 +260,7 @@ sub searchTracks {
 	return $tracks unless $prefs->get('all_access_enabled');
 
 	eval {
-		$googleResult = $googleapi->search_all_access($query, $maxResults);
+		$googleResult = $googleapi->search($query, $maxResults);
 	};
 
 	if ($@) {
