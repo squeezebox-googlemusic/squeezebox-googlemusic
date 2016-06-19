@@ -1,6 +1,18 @@
 squeezebox-googlemusic
 ======================
 
+This is an attempt to re-start development of the googlemusic plugin for squeezebox. hectus' excellent plugin has some problems with the latest API, and appears to have ceased development, so I've forked it into this organisation. If anyone would like to contribute or lead this, please let me know - I won't have heaps of time, but I figure that if we have a number of people partially active, and a single starting point, then we might keep this thing rolling.
+
+
+TODO
+----
+
+* Merge the best-working fork
+* Contact all interested parties to become members of the squeezebox-googlemusic team
+* See if hectus wants to hand over the main repo to this team account
+* Update docs
+* Update forums 
+
 [![Travis CI build status](https://travis-ci.org/hechtus/squeezebox-googlemusic.png?branch=master)](https://travis-ci.org/hechtus/squeezebox-googlemusic)
 [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=Z2KE8W5HW9F8W)
 
