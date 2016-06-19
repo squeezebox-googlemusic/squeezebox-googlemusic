@@ -23,7 +23,7 @@ Dev Resources
 
 * http://stackoverflow.com/questions/37535999/how-would-i-read-this-data-structure-in-perl-dictionary-hash-with-keys-containi
 * http://forums.slimdevices.com/showthread.php?98526-Google-Music-Plugin
-* https://github.com/hechtus/squeezebox-googlemusic/issues\
+* https://github.com/hechtus/squeezebox-googlemusic/issues
 
 Installation
 ------------
