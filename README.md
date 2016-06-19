@@ -18,8 +18,17 @@ based on the Python [Unofficial Google Play Music
 API](http://unofficial-google-music-api.readthedocs.org/) and the
 ability of inlining Python in Perl programs.
 
+Dev Resources
+-------------
+
+* http://stackoverflow.com/questions/37535999/how-would-i-read-this-data-structure-in-perl-dictionary-hash-with-keys-containi
+* http://forums.slimdevices.com/showthread.php?98526-Google-Music-Plugin
+* https://github.com/hechtus/squeezebox-googlemusic/issues\
+
 Installation
 ------------
+
+*These instructions are probably out of date*
 
 This installation procedure will only work on Linux based systems. At
 the moment I do not know if this will ever work on Windows. If you
