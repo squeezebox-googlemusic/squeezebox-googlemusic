@@ -7,7 +7,6 @@ This is an attempt to re-start development of the googlemusic plugin for squeeze
 TODO
 ----
 
-* Update these docs, including directions to get a dev setup
 * Test repo.xml in new URL
 * once working, notify forums
 
@@ -71,12 +70,7 @@ running on non-Linux systems to extend this How-to.
    API](https://github.com/simon-weber/Unofficial-Google-Music-API>)
    by running:
 
-         sudo pip install gmusicapi
-         
-   **Important Note**: At the moment you will need the developer
-     version of gmusicapi. Install this version by doing:
-
-         pip install git+https://github.com/simon-weber/Unofficial-Google-Music-API.git@develop
+         sudo pip install gmusicapi==10.0.1
 
 1. To be able to build the Perl package Inline::Python (see below) you
    will need the Python developer package. The name of the package and
