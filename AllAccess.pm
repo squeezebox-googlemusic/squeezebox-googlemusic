@@ -9,8 +9,8 @@ use Slim::Utils::Log;
 use Slim::Utils::Cache;
 
 use Plugins::GoogleMusic::GoogleAPI;
+use Inline::Python qw(py_eval);
 
-# Cache most of the results for one hour
 Readonly my $CACHE_TIME => 3600;
 # Cache track information for one day because get_album_info() would
 # be used too often
@@ -234,13 +234,24 @@ sub search {
 		$log->error("Not able to search All Access for \"$query\": $@");
 		return;
 	}
-	for my $hit (@{$googleResult->{song_hits}}) {
+
+
+	# These seemingly useless list comprehensions make this work!
+        # It seems that Inline Python doesn't deal with newlist as used in gmusicapi
+        # so this list comprehension creates a plain old list, which can be used in Perl
+        # See http://stackoverflow.com/questions/37937897/how-do-i-use-or-convert-or-view-inline-python-objects-in-perl
+        my $song_hits = py_eval("[x for x in $googleResult->{song_hits}]", 0);
+	for my $hit (@$song_hits) {
 		push @{$result->{tracks}}, to_slim_track($hit->{track});
 	}
-	for my $hit (@{$googleResult->{album_hits}}) {
+
+        my $album_hits = py_eval("[x for x in $googleResult->{album_hits}]", 0);
+	for my $hit (@$album_hits) {
 		push @{$result->{albums}}, album_to_slim_album($hit->{album});
 	}
-	for my $hit (@{$googleResult->{artist_hits}}) {
+
+        my $artist_hits = py_eval("[x for x in $googleResult->{artist_hits}]", 0);
+	for my $hit (@$artist_hits) {
 		push @{$result->{artists}}, artist_to_slim_artist($hit->{artist});
 	}
 
