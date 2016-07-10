@@ -505,11 +505,7 @@ sub getGenres {
 	$genres = [];
 
 	eval {
-		if (Plugins::GoogleMusic::GoogleAPI::get_version() lt '4.1.0') {
-			$googleGenres = $googleapi->get_genres($parent)->{genres};
-		} else {
-			$googleGenres = $googleapi->get_genres($parent);
-		}
+		$googleGenres = $googleapi->get_genres($parent);
 	};
 	if ($@) {
 		$log->error("Not able to get genres: $@");
