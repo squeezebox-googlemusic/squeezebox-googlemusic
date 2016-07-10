@@ -20,7 +20,6 @@ ability of inlining Python in Perl programs.
 Dev Resources
 -------------
 
-* http://stackoverflow.com/questions/37535999/how-would-i-read-this-data-structure-in-perl-dictionary-hash-with-keys-containi
 * http://forums.slimdevices.com/showthread.php?98526-Google-Music-Plugin
 * https://github.com/hechtus/squeezebox-googlemusic/issues
 
@@ -93,7 +92,7 @@ running on non-Linux systems to extend this How-to.
          sudo cpanm --notest Inline::Python
 
 1. To install the plugin, add the repository URL
-   http://hechtus.github.io/squeezebox-googlemusic/repository/repo.xml
+   http://squeezebox-googlemusic.github.io/squeezebox-googlemusic/repository/repo.xml
    to your squeezebox plugin settings page.
 
 Installation on OSX
@@ -145,7 +144,7 @@ reports for issue #28 you will have to do the following:
 1. Go to the Logitech Media Server with your browser. Visit the
    Plugins page and insert the repository URL for this Plugin at the
    bottom of the page:
-   http://hechtus.github.io/squeezebox-googlemusic/repository/repo.xml
+   http://squeezebox-googlemusic.github.io/squeezebox-googlemusic/repository/repo.xml
 
 1. Save and restart the Logitech Media Server. Provide your All Access
    information on the settings page.
