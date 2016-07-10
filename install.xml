@@ -2,7 +2,7 @@
 <extension>
 	<name>PLUGIN_GOOGLEMUSIC</name>
 	<module>Plugins::GoogleMusic::Plugin</module>
-	<version>0.5.0</version>
+	<version>0.6.0</version>
 	<description>PLUGIN_GOOGLEMUSIC_DESC</description>
 	<creator>Victor Rajewski</creator>
 	<email>askvictor@gmail.com</email>
