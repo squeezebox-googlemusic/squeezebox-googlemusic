@@ -3,13 +3,6 @@ squeezebox-googlemusic
 
 This is an attempt to re-start development of the googlemusic plugin for squeezebox. hectus' excellent plugin has some problems with the latest API, and appears to have ceased development, so I've forked it into this organisation. If anyone would like to contribute or lead this, please let me know - I won't have heaps of time, but I figure that if we have a number of people partially active, and a single starting point, then we might keep this thing rolling.
 
-
-TODO
-----
-
-* Test repo.xml in new URL
-* once working, notify forums
-
 This is a [Squeezebox](http://www.mysqueezebox.com/) (Logitech Media
 Server) Plug-in for playing music from your [Google Play
 Music](https://play.google.com/music/) library and All Access. It is
@@ -51,8 +44,6 @@ sudo service logitechmediaserver restart
 Installation
 ------------
 
-*These instructions are probably out of date*
-
 This installation procedure will only work on Linux based systems. At
 the moment I do not know if this will ever work on Windows. If you
 want to install this plugin on OSX have a look at the How-To
@@ -90,9 +81,10 @@ running on non-Linux systems to extend this How-to.
          sudo cpan App::cpanminus
          sudo cpanm --notest Inline
          sudo cpanm --notest Inline::Python
+         sudo cpanm --notest IO::Socket::SSL
 
 1. To install the plugin, add the repository URL
-   http://squeezebox-googlemusic.github.io/squeezebox-googlemusic/repository/repo.xml
+   https://squeezebox-googlemusic.github.io/squeezebox-googlemusic/repository/repo.xml
    to your squeezebox plugin settings page.
 
 Installation on OSX
