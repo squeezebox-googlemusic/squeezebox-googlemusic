@@ -1,7 +1,9 @@
 squeezebox-googlemusic
 ======================
 
-This is an attempt to re-start development of the googlemusic plugin for squeezebox. hectus' excellent plugin has some problems with the latest API, and appears to have ceased development, so I've forked it into this organisation. If anyone would like to contribute or lead this, please let me know - I won't have heaps of time, but I figure that if we have a number of people partially active, and a single starting point, then we might keep this thing rolling.
+This is an attempt to re-start development of the googlemusic plugin for squeezebox. hectus' excellent plugin has some problems with the latest API, and appears to have ceased development, so I've forked it into this organisation. 
+
+At this point, I'm only really working on this if it's broken on my home installation. If anyone would like to contribute or lead this, please let me know - I won't have heaps of time, but I figure that if we have a number of people partially active, and a single starting point, then we might keep this thing rolling.
 
 This is a [Squeezebox](http://www.mysqueezebox.com/) (Logitech Media
 Server) Plug-in for playing music from your [Google Play
