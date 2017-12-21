@@ -14,8 +14,9 @@ ability of inlining Python in Perl programs.
 
 Dev Resources
 -------------
-
-* http://forums.slimdevices.com/showthread.php?98526-Google-Music-Plugin
+* Current forum thread: http://forums.slimdevices.com/showthread.php?105800-Announce-Google-Music-plugin
+* Previous forum thread (Hechtus's version): http://forums.slimdevices.com/showthread.php?98526-Google-Music-Plugin
+* https://github.com/squeezebox-googlemusic/squeezebox-googlemusic/issues
 * https://github.com/hechtus/squeezebox-googlemusic/issues
 
 Development setup (Deb-based Linux)
