@@ -25,6 +25,7 @@ Development setup (Deb-based Linux)
 ```
 sudo pip2 install gmusicapi==10.0.1  #depening on your installed python version, you might have to use pip
 sudo apt-get install python-dev
+sudo apt-get install libio-socket-ssl-perl
 sudo cpan App::cpanminus
 sudo cpanm --notest Inline
 sudo cpanm --notest Inline::Python
