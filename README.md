@@ -1,3 +1,5 @@
+<img src="./HTML/EN/plugins/GoogleMusic/html/images/icon.png" align="left" width="144px" height="144px"/>
+
 squeezebox-googlemusic
 ======================
 
