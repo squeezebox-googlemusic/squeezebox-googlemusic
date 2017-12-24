@@ -2,7 +2,12 @@ package Plugins::GoogleMusic::ProtocolHandler;
 
 use strict;
 use warnings;
-use base qw(Slim::Player::Protocols::HTTP);
+
+# On LMS 7.9.0 and greater, https support is handled by the new
+# Slim::Player::Protocols::HTTPS library, which isn't available
+# on older versions
+use if (Slim::Utils::Versions->compareVersions($::VERSION, '7.9.0')) >= 0, base => qw(Slim::Player::Protocols::HTTPS);
+use if (Slim::Utils::Versions->compareVersions($::VERSION, '7.9.0')) < 0, base => qw(Slim::Player::Protocols::HTTP);
 
 use Scalar::Util qw(blessed);
 use Slim::Player::Playlist;
