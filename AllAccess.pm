@@ -112,11 +112,7 @@ sub to_slim_artist {
 	my $uri = 'googlemusic:artist:' . $id;
 	my $name = $song->{artist};
 
-	my $image = '/html/images/artists.png';
-	if (exists $song->{artistArtRef}) {
-		$image = $song->{artistArtRef}[0]{url};
-		$image = Plugins::GoogleMusic::Image->uri($image);
-	}
+    my $image = Plugins::GoogleMusic::Image::best($song, 'artistArtRef', 'artistArtRefs', '/html/images/artists.png');
 
 	my $artist = {
 		uri => $uri,
@@ -143,17 +139,20 @@ sub to_slim_album_artist {
 	# TODO: No album artist ID in tracks. Should we fetch the album info?
 	my $uri = 'googlemusic:artist:unknown';
 
-	my $image = '/html/images/artists.png';
 	# Check to see if this album is a compilation from various
 	# artists. The Google Music webinterface also shows a 'Various
 	# artists' in my library instead of all seperate artists.. which
 	# should justify this functionality
 	my $various = (index(lc($song->{artist}), lc($song->{albumArtist} || '')) == -1) ? 1 : 0;
-	if (exists $song->{artistArtRef} and not $various) {
-		$image = $song->{artistArtRef}[0]{url};
-		$image = Plugins::GoogleMusic::Image->uri($image);
+	my $image;
+	if ($various) {
+    	$image = '/html/images/artists.png';
 	}
-	
+	else {
+    	$image = Plugins::GoogleMusic::Image::best($song, 'artistArtRef', 'artistArtRefs', '/html/images/artists.png');
+	}
+    
+
 	my $artist = {
 		uri => $uri,
 		id => 'unknown',
@@ -343,11 +342,7 @@ sub get_artist_image {
 		$log->error("Not able to get the artist image for artist ID $id: $@");
 	}
 
-	my $image = '/html/images/artists.png';
-	if ($googleArtist && exists $googleArtist->{artistArtRef}) {
-		$image = $googleArtist->{artistArtRef};
-		$image = Plugins::GoogleMusic::Image->uri($image);
-	}
+    my $image = Plugins::GoogleMusic::Image::best($googleArtist, 'artistArtRef', 'artistArtRefs', '/html/images/artists.png');
 
 	# Add to the cache
 	$cache->set($imageuri, $image, $CACHE_TIME);
@@ -448,11 +443,7 @@ sub artist_to_slim_artist {
 
 	my $uri = 'googlemusic:artist:' . $googleArtist->{artistId};
 
-	my $image = '/html/images/artists.png';
-	if (exists $googleArtist->{artistArtRef}) {
-		$image = $googleArtist->{artistArtRef};
-		$image = Plugins::GoogleMusic::Image->uri($image);
-	}
+    my $image = Plugins::GoogleMusic::Image::best($googleArtist, 'artistArtRef', 'artistArtRefs', '/html/images/artists.png');
 
 	my $artist = {
 		uri => $uri,
