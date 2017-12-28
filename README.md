@@ -10,9 +10,8 @@
 This is a [Squeezebox](http://www.mysqueezebox.com/) (Logitech Media
 Server) Plug-in for playing music from your [Google Play
 Music](https://play.google.com/music/) library and All Access. It is
-based on the Python [Unofficial Google Play Music
-API](http://unofficial-google-music-api.readthedocs.org/) and the
-ability of inlining Python in Perl programs.
+based on the Python [gmusicapi](http://unofficial-google-music-api.readthedocs.org/)
+library and the ability of inlining Python in Perl programs.
 
 ## Table of Contents
 
@@ -52,8 +51,7 @@ systems to extend this How-to.
 
 1. Install Python and [Python pip](http://www.pip-installer.org).
 
-1. Install the [Unofficial Google Play Music
-   API](https://github.com/simon-weber/Unofficial-Google-Music-API>)
+1. Install [gmusicapi](https://github.com/simon-weber/gmusicapi)
    by running:
 
    ```
@@ -121,7 +119,7 @@ reports for issue #28 you will have to do the following:
    cd Downloads
    ```
 
-1. Install the [Unofficial Google Play Music API](https://github.com/simon-weber/Unofficial-Google-Music-API)
+1. Install [gmusicapi](https://github.com/simon-weber/gmusicapi)
    by running:
 
    ```
@@ -132,7 +130,7 @@ reports for issue #28 you will have to do the following:
      version of gmusicapi. Install this version by doing:
 
    ```
-   sudo pip install git+https://github.com/simon-weber/Unofficial-Google-Music-API.git@develop
+   sudo pip install git+https://github.com/simon-weber/gmusicapi.git@develop
    ```
 
 1. Install the Perl CPAN package
