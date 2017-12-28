@@ -17,171 +17,171 @@ tie my %recentAlbums, 'Tie::Cache::LRU', 50;
 tie my %recentArtists, 'Tie::Cache::LRU', 50;
 
 sub init {
-	$cache = shift;
+    $cache = shift;
 
-	my $recent;
+    my $recent;
 
-	# initialize recent items: need to add them to the LRU cache ordered by timestamp
-	$recent = $cache->get('recentSearches');
-	map {
-		$recentSearches{$_} = $recent->{$_};
-	} sort {
-		$recent->{$a}->{ts} <=> $recent->{$b}->{ts}
-	} keys %$recent;
+    # initialize recent items: need to add them to the LRU cache ordered by timestamp
+    $recent = $cache->get('recentSearches');
+    map {
+        $recentSearches{$_} = $recent->{$_};
+    } sort {
+        $recent->{$a}->{ts} <=> $recent->{$b}->{ts}
+    } keys %$recent;
 
-	$recent = $cache->get('recentAlbums');
-	map {
-		$recentAlbums{$_} = $recent->{$_};
-	} sort {
-		$recent->{$a}->{ts} <=> $recent->{$b}->{ts}
-	} keys %$recent;
+    $recent = $cache->get('recentAlbums');
+    map {
+        $recentAlbums{$_} = $recent->{$_};
+    } sort {
+        $recent->{$a}->{ts} <=> $recent->{$b}->{ts}
+    } keys %$recent;
 
-	$recent = $cache->get('recentArtists');
-	map {
-		$recentArtists{$_} = $recent->{$_};
-	} sort {
-		$recent->{$a}->{ts} <=> $recent->{$b}->{ts}
-	} keys %$recent;
+    $recent = $cache->get('recentArtists');
+    map {
+        $recentArtists{$_} = $recent->{$_};
+    } sort {
+        $recent->{$a}->{ts} <=> $recent->{$b}->{ts}
+    } keys %$recent;
 
-	return;
+    return;
 }
 
 sub recentSearchesAdd {
-	my $search = shift;
+    my $search = shift;
 
-	return unless $search;
+    return unless $search;
 
-	$recentSearches{$search} = {
-		ts => time(),
-	};
+    $recentSearches{$search} = {
+        ts => time(),
+    };
 
-	$cache->set('recentSearches', \%recentSearches, 'never');
+    $cache->set('recentSearches', \%recentSearches, 'never');
 
-	return;
+    return;
 }
 
 sub recentSearchesFeed {
-	my ($client, $callback, $args, $opts) = @_;
+    my ($client, $callback, $args, $opts) = @_;
 
-	my @searches =
-		sort { lc($a) cmp lc($b) }
-		keys %recentSearches;
+    my @searches =
+        sort { lc($a) cmp lc($b) }
+        keys %recentSearches;
 
-	my $search_func = $opts->{'all_access'} ?
-		\&Plugins::GoogleMusic::Plugin::search_all_access :
-		\&Plugins::GoogleMusic::Plugin::search;
+    my $search_func = $opts->{'all_access'} ?
+        \&Plugins::GoogleMusic::Plugin::search_all_access :
+        \&Plugins::GoogleMusic::Plugin::search;
 
-	my $items = [];
+    my $items = [];
 
-	foreach (@searches) {
-		push @$items, {
-			type => 'link',
-			name => $_,
-			url  => $search_func,
-			passthrough => [ $_ ],
-		}
-	}
+    foreach (@searches) {
+        push @$items, {
+            type => 'link',
+            name => $_,
+            url  => $search_func,
+            passthrough => [ $_ ],
+        }
+    }
 
-	$items = [ {
-		name => cstring($client, 'EMPTY'),
-		type => 'text',
-	} ] if !scalar @$items;
+    $items = [ {
+        name => cstring($client, 'EMPTY'),
+        type => 'text',
+    } ] if !scalar @$items;
 
-	$callback->({
-		items => $items
-	});
+    $callback->({
+        items => $items
+    });
 
-	return;
+    return;
 }
 
 sub recentAlbumsAdd {
-	my $album = shift;
+    my $album = shift;
 
-	return unless $album;
+    return unless $album;
 
-	$recentAlbums{$album->{uri}} = {
-		uri => $album->{uri},
-		name => $album->{name},
-		artist => $album->{artist},
-		year => $album->{year},
-		cover => $album->{cover},
-		ts => time(),
-	};
+    $recentAlbums{$album->{uri}} = {
+        uri => $album->{uri},
+        name => $album->{name},
+        artist => $album->{artist},
+        year => $album->{year},
+        cover => $album->{cover},
+        ts => time(),
+    };
 
-	$cache->set('recentAlbums', \%recentAlbums, 'never');
+    $cache->set('recentAlbums', \%recentAlbums, 'never');
 
-	return;
+    return;
 }
 
 # Cache the menu because it may change when browsing into it. At least
 # this works on a per client base.
 my %recentAlbumsCache;
 sub recentAlbumsFeed {
-	my ($client, $callback, $args, $opts) = @_;
+    my ($client, $callback, $args, $opts) = @_;
 
-	my $clientId = $client ? $client->id() : '0';
-	my $albums;
+    my $clientId = $client ? $client->id() : '0';
+    my $albums;
 
-	if (defined $args->{'quantity'} && $args->{'quantity'} == 1 &&
-		exists $recentAlbumsCache{$clientId}) {
-		$albums = $recentAlbumsCache{$clientId};
-	} else {
-		# Access the LRU cache in reverse order to maintain the order
-		@$albums = reverse
-			grep { $opts->{all_access} ? $_->{uri} =~ '^googlemusic:album:B' : $_->{uri} !~ '^googlemusic:album:B' }
-			map { $recentAlbums{$_} } reverse keys %recentAlbums;
+    if (defined $args->{'quantity'} && $args->{'quantity'} == 1 &&
+        exists $recentAlbumsCache{$clientId}) {
+        $albums = $recentAlbumsCache{$clientId};
+    } else {
+        # Access the LRU cache in reverse order to maintain the order
+        @$albums = reverse
+            grep { $opts->{all_access} ? $_->{uri} =~ '^googlemusic:album:B' : $_->{uri} !~ '^googlemusic:album:B' }
+            map { $recentAlbums{$_} } reverse keys %recentAlbums;
 
-		$recentAlbumsCache{$clientId} = $albums;
-	}
+        $recentAlbumsCache{$clientId} = $albums;
+    }
 
-	return Plugins::GoogleMusic::AlbumMenu::feed($client, $callback, $args, $albums, $opts);
+    return Plugins::GoogleMusic::AlbumMenu::feed($client, $callback, $args, $albums, $opts);
 }
 
 sub recentArtistsAdd {
-	my $artist = shift;
+    my $artist = shift;
 
-	return unless $artist;
+    return unless $artist;
 
-	my $image = $artist->{image};
+    my $image = $artist->{image};
 
-	if ($image =~ '^/html/images/' && $artist->{uri} =~ '^googlemusic:artist:A') {
-		$image = Plugins::GoogleMusic::AllAccess::get_artist_image($artist->{uri});
-	}
+    if ($image =~ '^/html/images/' && $artist->{uri} =~ '^googlemusic:artist:A') {
+        $image = Plugins::GoogleMusic::AllAccess::get_artist_image($artist->{uri});
+    }
 
-	$recentArtists{$artist->{uri}} = {
-		uri => $artist->{uri},
-		name => $artist->{name},
-		image => $image,
-		ts => time(),
-	};
+    $recentArtists{$artist->{uri}} = {
+        uri => $artist->{uri},
+        name => $artist->{name},
+        image => $image,
+        ts => time(),
+    };
 
-	$cache->set('recentArtists', \%recentArtists, 'never');
+    $cache->set('recentArtists', \%recentArtists, 'never');
 
-	return;
+    return;
 }
 
 # Cache the menu because it may change when browsing into it. At least
 # this works on a per client base.
 my %recentArtistsCache;
 sub recentArtistsFeed {
-	my ($client, $callback, $args, $opts) = @_;
+    my ($client, $callback, $args, $opts) = @_;
 
-	my $clientId = $client ? $client->id() : '0';
-	my $artists;
+    my $clientId = $client ? $client->id() : '0';
+    my $artists;
 
-	if (defined $args->{'quantity'} && $args->{'quantity'} == 1 &&
-		exists $recentArtistsCache{$clientId}) {
-		$artists = $recentArtistsCache{$clientId};
-	} else {
-		# Access the LRU cache in reverse order to maintain the order
-		@$artists = reverse
-			grep { $opts->{all_access} ? $_->{uri} =~ '^googlemusic:artist:A' : $_->{uri} !~ '^googlemusic:artist:A' }
-			map { $recentArtists{$_} } reverse keys %recentArtists;
+    if (defined $args->{'quantity'} && $args->{'quantity'} == 1 &&
+        exists $recentArtistsCache{$clientId}) {
+        $artists = $recentArtistsCache{$clientId};
+    } else {
+        # Access the LRU cache in reverse order to maintain the order
+        @$artists = reverse
+            grep { $opts->{all_access} ? $_->{uri} =~ '^googlemusic:artist:A' : $_->{uri} !~ '^googlemusic:artist:A' }
+            map { $recentArtists{$_} } reverse keys %recentArtists;
 
-		$recentArtistsCache{$clientId} = $artists;
-	}
+        $recentArtistsCache{$clientId} = $artists;
+    }
 
-	return Plugins::GoogleMusic::ArtistMenu::feed($client, $callback, $args, $artists, $opts);
+    return Plugins::GoogleMusic::ArtistMenu::feed($client, $callback, $args, $artists, $opts);
 }
 
 

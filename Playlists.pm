@@ -21,104 +21,104 @@ my $googleapi = Plugins::GoogleMusic::GoogleAPI::get();
 my $playlists = {};
 
 sub feed {
-	my ($client, $callback, $args) = @_;
+    my ($client, $callback, $args) = @_;
 
-	my @items;
+    my @items;
 
-	foreach (sort {lc($a->{name}) cmp lc($b->{name})} values %$playlists) {
-		push @items, _showPlaylist($client, $_);
-	}
+    foreach (sort {lc($a->{name}) cmp lc($b->{name})} values %$playlists) {
+        push @items, _showPlaylist($client, $_);
+    }
 
-	if (!scalar @items) {
-		push @items, {
-			'name' => cstring($client, 'EMPTY'),
-			'type' => 'text',
-		}
+    if (!scalar @items) {
+        push @items, {
+            'name' => cstring($client, 'EMPTY'),
+            'type' => 'text',
+        }
 
-	}
+    }
 
-	$callback->({
-		items => \@items,
-	});
+    $callback->({
+        items => \@items,
+    });
 
-	return;
+    return;
 }
 
 sub _showPlaylist {
-	my ($client, $playlist) = @_;
+    my ($client, $playlist) = @_;
 
-	my $item = {
-		name => $playlist->{'name'},
-		type => 'playlist',
-		url => \&Plugins::GoogleMusic::TrackMenu::feed,
-		passthrough => [$playlist->{tracks}, { showArtist => 1, showAlbum => 1, playall => 1 }],
-	};
+    my $item = {
+        name => $playlist->{'name'},
+        type => 'playlist',
+        url => \&Plugins::GoogleMusic::TrackMenu::feed,
+        passthrough => [$playlist->{tracks}, { showArtist => 1, showAlbum => 1, playall => 1 }],
+    };
 
-	return $item;
+    return $item;
 }
 
 # Reload and reparse all playlists
 sub refresh {
-	my $googlePlaylists;
+    my $googlePlaylists;
 
-	if (!$googleapi->is_authenticated()) {
-		return;
-	}
+    if (!$googleapi->is_authenticated()) {
+        return;
+    }
 
-	$playlists = {};
+    $playlists = {};
 
-	# Get all user playlists first
-	$googlePlaylists = $googleapi->get_all_user_playlist_contents();
-	for my $googlePlaylist (@$googlePlaylists) {
-		my $playlist = {};
-		$playlist->{name} = $googlePlaylist->{name};
-		$playlist->{uri} = 'googlemusic:playlist:' . $googlePlaylist->{id};
-		$playlist->{tracks} = to_slim_playlist_tracks($googlePlaylist->{tracks});
-		$playlists->{$playlist->{uri}} = $playlist;
-	}
+    # Get all user playlists first
+    $googlePlaylists = $googleapi->get_all_user_playlist_contents();
+    for my $googlePlaylist (@$googlePlaylists) {
+        my $playlist = {};
+        $playlist->{name} = $googlePlaylist->{name};
+        $playlist->{uri} = 'googlemusic:playlist:' . $googlePlaylist->{id};
+        $playlist->{tracks} = to_slim_playlist_tracks($googlePlaylist->{tracks});
+        $playlists->{$playlist->{uri}} = $playlist;
+    }
 
-	# Now get all shared playlists
-	$googlePlaylists = $googleapi->get_all_playlists();
-	for my $googlePlaylist (@$googlePlaylists) {
-		if (exists $googlePlaylist->{type} && $googlePlaylist->{type} eq 'SHARED') {
-			my $playlist = {};
-			$playlist->{name} = $googlePlaylist->{name};
-			$playlist->{uri} = 'googlemusic:playlist:' . $googlePlaylist->{id};
-			my $googleTracks = $googleapi->get_shared_playlist_contents($googlePlaylist->{shareToken});
-			$playlist->{tracks} = to_slim_playlist_tracks($googleTracks);
-			$playlists->{$playlist->{uri}} = $playlist;
-		}
-	}
-	
-	return;
+    # Now get all shared playlists
+    $googlePlaylists = $googleapi->get_all_playlists();
+    for my $googlePlaylist (@$googlePlaylists) {
+        if (exists $googlePlaylist->{type} && $googlePlaylist->{type} eq 'SHARED') {
+            my $playlist = {};
+            $playlist->{name} = $googlePlaylist->{name};
+            $playlist->{uri} = 'googlemusic:playlist:' . $googlePlaylist->{id};
+            my $googleTracks = $googleapi->get_shared_playlist_contents($googlePlaylist->{shareToken});
+            $playlist->{tracks} = to_slim_playlist_tracks($googleTracks);
+            $playlists->{$playlist->{uri}} = $playlist;
+        }
+    }
+
+    return;
 }
 
 sub to_slim_playlist_tracks {
-	my $googleTracks = shift;
-	
-	my $tracks = [];
+    my $googleTracks = shift;
 
-	for my $song (@{$googleTracks}) {
-		my $track;
-		# Is it an All Access track?
-		if ($song->{trackId} =~ '^T') {
-			# Already populated?
-			if (exists $song->{track}) {
-				$track = Plugins::GoogleMusic::AllAccess::to_slim_track($song->{track});
-			} else {
-				$track = Plugins::GoogleMusic::AllAccess::get_track_by_id($song->{trackId});
-			}
-		} else {
-			$track = Plugins::GoogleMusic::Library::get_track_by_id($song->{trackId});
-		}
-		if ($track) {
-			push @{$tracks}, $track;
-		} else {
-			$log->error('Not able to lookup playlist track ' . $song->{trackId});
-		}
-	}
+    my $tracks = [];
 
-	return $tracks;
+    for my $song (@{$googleTracks}) {
+        my $track;
+        # Is it an All Access track?
+        if ($song->{trackId} =~ '^T') {
+            # Already populated?
+            if (exists $song->{track}) {
+                $track = Plugins::GoogleMusic::AllAccess::to_slim_track($song->{track});
+            } else {
+                $track = Plugins::GoogleMusic::AllAccess::get_track_by_id($song->{trackId});
+            }
+        } else {
+            $track = Plugins::GoogleMusic::Library::get_track_by_id($song->{trackId});
+        }
+        if ($track) {
+            push @{$tracks}, $track;
+        } else {
+            $log->error('Not able to lookup playlist track ' . $song->{trackId});
+        }
+    }
+
+    return $tracks;
 }
 
 

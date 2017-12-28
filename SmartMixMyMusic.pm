@@ -15,66 +15,66 @@ my $prefs = preferences('plugin.googlemusic');
 my $googleapi = Plugins::GoogleMusic::GoogleAPI::get();
 
 sub init {
-	($VERSION) = @_;
+    ($VERSION) = @_;
 
-	return;
+    return;
 }
 
 sub getId {
-	my ($class, $client) = @_;
+    my ($class, $client) = @_;
 
-	return unless $client;
+    return unless $client;
 
-	return unless Slim::Utils::PluginManager->isEnabled('Plugins::GoogleMusic::Plugin');
+    return unless Slim::Utils::PluginManager->isEnabled('Plugins::GoogleMusic::Plugin');
 
-	return if preferences('plugin.smartmix')->get('disable_GoogleMusicMyMusic');
+    return if preferences('plugin.smartmix')->get('disable_GoogleMusicMyMusic');
 
-	return ( $googleapi->is_authenticated() ) ? 'GoogleMusicMyMusic' : undef;
+    return ( $googleapi->is_authenticated() ) ? 'GoogleMusicMyMusic' : undef;
 } 
 
 sub getUrl {
-	my ($class, $id, $client) = @_;
+    my ($class, $id, $client) = @_;
 
-	# we can't handle the id - return a search handler instead
-	return sub {
-		$class->resolveUrl(@_);
-	} if $class->getId($client);
+    # we can't handle the id - return a search handler instead
+    return sub {
+        $class->resolveUrl(@_);
+    } if $class->getId($client);
 
-	return;
+    return;
 }
 
 sub resolveUrl {
-	my ($class, $cb, $args) = @_;
+    my ($class, $cb, $args) = @_;
 
-	# Try to find the track in My Music. The user could have
-	# uploaded it or bought it.
-	my $searchResult =
-		Plugins::GoogleMusic::Library::searchTracks(
-			{ artist => $args->{artist},
-			  track => $args->{title} });
+    # Try to find the track in My Music. The user could have
+    # uploaded it or bought it.
+    my $searchResult =
+        Plugins::GoogleMusic::Library::searchTracks(
+            { artist => $args->{artist},
+              track => $args->{title} });
 
-	# No success?
-	if (!@$searchResult) {
-		$cb->();
-		return;
-	}
+    # No success?
+    if (!@$searchResult) {
+        $cb->();
+        return;
+    }
 
-	# Translate tracks to SmartMix canditates
-	my $candidates = [];
+    # Translate tracks to SmartMix canditates
+    my $candidates = [];
 
-	for my $track ( @$searchResult ) {
-		# Double check fields, even if they should be all available.
-		next unless $track->{artist} && $track->{uri} && $track->{title};
-		push @$candidates, {
-			title  => $track->{title},
-			artist => $track->{artist}->{name},
-			url    => $track->{uri},
-		};
-	}
+    for my $track ( @$searchResult ) {
+        # Double check fields, even if they should be all available.
+        next unless $track->{artist} && $track->{uri} && $track->{title};
+        push @$candidates, {
+            title  => $track->{title},
+            artist => $track->{artist}->{name},
+            url    => $track->{uri},
+        };
+    }
 
-	$cb->( Plugins::SmartMix::Services->getUrlFromCandidates($candidates, $args) );
+    $cb->( Plugins::SmartMix::Services->getUrlFromCandidates($candidates, $args) );
 
-	return;
+    return;
 }
 
 sub urlToId {}

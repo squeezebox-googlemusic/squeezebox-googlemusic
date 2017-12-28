@@ -8,51 +8,51 @@ use warnings;
 Slim::Player::ProtocolHandlers->registerHandler(googlemusicradio => __PACKAGE__);
 
 sub overridePlayback {
-	my ( $class, $client, $url ) = @_;
+    my ( $class, $client, $url ) = @_;
 
-	if ($url =~ /^googlemusicradio:station:(.*)$/) {
+    if ($url =~ /^googlemusicradio:station:(.*)$/) {
 
-		$client->execute(["googlemusicradio", "station", $1]);
+        $client->execute(["googlemusicradio", "station", $1]);
 
-		return 1;
-	} elsif ($url =~ /^googlemusicradio:artist:(.*)$/) {
+        return 1;
+    } elsif ($url =~ /^googlemusicradio:artist:(.*)$/) {
 
-		$client->execute(["googlemusicradio", "artist", $1]);
+        $client->execute(["googlemusicradio", "artist", $1]);
 
-		return 1;
-	} elsif ($url =~ /^googlemusicradio:album:(.*)$/) {
+        return 1;
+    } elsif ($url =~ /^googlemusicradio:album:(.*)$/) {
 
-		$client->execute(["googlemusicradio", "album", $1]);
+        $client->execute(["googlemusicradio", "album", $1]);
 
-		return 1;
-	} elsif ($url =~ /^googlemusicradio:track:(.*)$/) {
+        return 1;
+    } elsif ($url =~ /^googlemusicradio:track:(.*)$/) {
 
-		$client->execute(["googlemusicradio", "track", $1]);
+        $client->execute(["googlemusicradio", "track", $1]);
 
-		return 1;
-	} elsif ($url =~ /^googlemusicradio:genre:(.*)$/) {
+        return 1;
+    } elsif ($url =~ /^googlemusicradio:genre:(.*)$/) {
 
-		$client->execute(["googlemusicradio", "genre", $1]);
+        $client->execute(["googlemusicradio", "genre", $1]);
 
-		return 1;
-	}
+        return 1;
+    }
 
-	return;
+    return;
 }
 
 sub canDirectStream {
-	return 0;
+    return 0;
 }
 
 sub isRemote {
-	return 0;
+    return 0;
 }
 sub contentType {
-	return 'googlemusicradio';
+    return 'googlemusicradio';
 }
 
 sub getIcon {
-	return Plugins::GoogleMusic::Plugin->_pluginDataFor('icon');
+    return Plugins::GoogleMusic::Plugin->_pluginDataFor('icon');
 }
 
 

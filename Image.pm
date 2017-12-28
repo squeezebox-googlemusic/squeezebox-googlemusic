@@ -25,216 +25,216 @@ my $id = 0;
 
 # Initialization of the module
 sub init {
-	Slim::Web::Pages->addRawFunction('/googlemusicimage', \&handler);
+    Slim::Web::Pages->addRawFunction('/googlemusicimage', \&handler);
 
-	return;
+    return;
 }
 
 # TBD: We could do this, but for now we use the squeezebox image proxy
 sub handler {
-	my ($httpClient, $response) = @_;
+    my ($httpClient, $response) = @_;
 
-	my $path = $response->request->uri;
+    my $path = $response->request->uri;
 
-	$path =~ /\/googlemusicimage\/(.*?)\/image #
-			(?:_(X|\d+)x(X|\d+))? # width and height are given here, e.g. 300x300
-			(?:_([sSfFpcom]))?    # resizeMode, given by a single character
-			(?:_([\da-fA-F]+))?   # background color, optional
-			\.jpg$
-			/ix;
+    $path =~ /\/googlemusicimage\/(.*?)\/image #
+            (?:_(X|\d+)x(X|\d+))? # width and height are given here, e.g. 300x300
+            (?:_([sSfFpcom]))?    # resizeMode, given by a single character
+            (?:_([\da-fA-F]+))?   # background color, optional
+            \.jpg$
+            /ix;
 
-	my $image = $1;
-	my $needsResize = defined $2 || defined $3 || defined $4 || defined $5 || 0;
-	my $resizeParams = $needsResize ? [ $2, $3, $4, $5 ] : undef;
+    my $image = $1;
+    my $needsResize = defined $2 || defined $3 || defined $4 || defined $5 || 0;
+    my $resizeParams = $needsResize ? [ $2, $3, $4, $5 ] : undef;
 
-	if (!$image) {
+    if (!$image) {
 
-		$log->info("bad image request - sending 404, path: $path");
+        $log->info("bad image request - sending 404, path: $path");
 
-		$response->code(RC_NOT_FOUND);
-		$response->content_length(0);
+        $response->code(RC_NOT_FOUND);
+        $response->content_length(0);
 
-		Slim::Web::HTTP::addHTTPResponse($httpClient, $response, '', 1, 0);
+        Slim::Web::HTTP::addHTTPResponse($httpClient, $response, '', 1, 0);
 
-		return;
-	}
+        return;
+    }
 
-	$id = ($id + 1) % 10_000;
+    $id = ($id + 1) % 10_000;
 
-	$log->info("queuing image id: $id request: $image (resizing: $needsResize)");
+    $log->info("queuing image id: $id request: $image (resizing: $needsResize)");
 
-	push @fetchQ, { id => $id, timeout => time() + $IMAGE_REQUEST_TIMEOUT1, path => $path, 
-					httpClient => $httpClient, response => $response, resizeP => $resizeParams, image => $image,
-				  };
+    push @fetchQ, { id => $id, timeout => time() + $IMAGE_REQUEST_TIMEOUT1, path => $path, 
+                    httpClient => $httpClient, response => $response, resizeP => $resizeParams, image => $image,
+                  };
 
-	$log->debug(sub { "fetchQ: " . (scalar @fetchQ) . " fetching: " . (scalar keys %fetching) });
+    $log->debug(sub { "fetchQ: " . (scalar @fetchQ) . " fetching: " . (scalar keys %fetching) });
 
-	if (scalar keys %fetching < $MAX_IMAGE_REQUEST) {
+    if (scalar keys %fetching < $MAX_IMAGE_REQUEST) {
 
-		_fetch();
+        _fetch();
 
-	} else {
+    } else {
 
-		# handle case where we don't appear to get a callback for an async request and it has timed out
-		for my $key (keys %fetching) {
+        # handle case where we don't appear to get a callback for an async request and it has timed out
+        for my $key (keys %fetching) {
 
-			if ($fetching{$key}->{'timeout'} < time()) {
+            if ($fetching{$key}->{'timeout'} < time()) {
 
-				$log->debug("stale fetch entry - closing");
+                $log->debug("stale fetch entry - closing");
 
-				my $entry = delete $fetching{$key};
+                my $entry = delete $fetching{$key};
 
-				_sendUnavailable($entry->{'httpClient'}, $entry->{'response'});
+                _sendUnavailable($entry->{'httpClient'}, $entry->{'response'});
 
-				_fetch();
-			}
-		}
-	}
+                _fetch();
+            }
+        }
+    }
 
-	return;
+    return;
 }
 
 
 sub _fetch {
-	my $entry;
+    my $entry;
 
-	while (!$entry && @fetchQ) {
+    while (!$entry && @fetchQ) {
 
-		 $entry = shift @fetchQ;
+         $entry = shift @fetchQ;
 
-		 if (!$entry->{'httpClient'}->connected) {
-			 $entry = undef;
-			 next;
-		 }
+         if (!$entry->{'httpClient'}->connected) {
+             $entry = undef;
+             next;
+         }
 
-		 if ($entry->{'timeout'} < time()) {
-			 _sendUnavailable($entry->{'httpClient'}, $entry->{'response'});
-			 $entry = undef;
-		 } 
-	}
+         if ($entry->{'timeout'} < time()) {
+             _sendUnavailable($entry->{'httpClient'}, $entry->{'response'});
+             $entry = undef;
+         } 
+    }
 
-	return unless $entry;
+    return unless $entry;
 
-	my $image = $entry->{'image'};
-	my $resizeP = $entry->{'resizeP'};
+    my $image = $entry->{'image'};
+    my $resizeP = $entry->{'resizeP'};
 
-	if ($resizeP) {
-		my $s = min($resizeP->[0], $resizeP->[1]);
-		$image .= "=s$s-c";
-	}
+    if ($resizeP) {
+        my $s = min($resizeP->[0], $resizeP->[1]);
+        $image .= "=s$s-c";
+    }
 
-	$log->info("fetching image: $image");
+    $log->info("fetching image: $image");
 
-	$entry->{'timeout'} = time() + $IMAGE_REQUEST_TIMEOUT2;
+    $entry->{'timeout'} = time() + $IMAGE_REQUEST_TIMEOUT2;
 
-	$fetching{ $entry->{'id'} } = $entry;
+    $fetching{ $entry->{'id'} } = $entry;
 
-	Slim::Networking::SimpleAsyncHTTP->new(
-		\&_gotImage, \&_gotError, $entry
-		)->get("https://$image");
+    Slim::Networking::SimpleAsyncHTTP->new(
+        \&_gotImage, \&_gotError, $entry
+        )->get("https://$image");
 
-	return;
+    return;
 }
 
 sub _gotImage {
-	my $http = shift;
-	my $httpClient = $http->params('httpClient');
-	my $response   = $http->params('response');
-	my $resizeP    = $http->params('resizeP');
-	my $path       = $http->params('path');
-	my $id         = $http->params('id');
+    my $http = shift;
+    my $httpClient = $http->params('httpClient');
+    my $response   = $http->params('response');
+    my $resizeP    = $http->params('resizeP');
+    my $path       = $http->params('path');
+    my $id         = $http->params('id');
 
-	my $body;
+    my $body;
 
-	if ($httpClient->connected) {
+    if ($httpClient->connected) {
 
-		$response->code(RC_OK);
-		$response->content_type('image/jpeg');
-		
-		$response->header('Cache-Control' => 'max-age=' . $EXP_TIME);
-		$response->expires(time() + $EXP_TIME);
-		
-		use bytes;
-		$response->content_length($body ? length($$body) : length($http->content));
+        $response->code(RC_OK);
+        $response->content_type('image/jpeg');
 
-		Slim::Web::HTTP::addHTTPResponse($httpClient, $response, $body || $http->contentRef, 1, 0);
-	}
+        $response->header('Cache-Control' => 'max-age=' . $EXP_TIME);
+        $response->expires(time() + $EXP_TIME);
 
-	delete $fetching{ $id };
+        use bytes;
+        $response->content_length($body ? length($$body) : length($http->content));
 
-	_fetch();
+        Slim::Web::HTTP::addHTTPResponse($httpClient, $response, $body || $http->contentRef, 1, 0);
+    }
 
-	return;
+    delete $fetching{ $id };
+
+    _fetch();
+
+    return;
 }
 
 sub _gotError {
-	my $http = shift;
-	my $error = shift;
-	my $httpClient = $http->params('httpClient');
-	my $response   = $http->params('response');
-	my $id         = $http->params('id');
+    my $http = shift;
+    my $error = shift;
+    my $httpClient = $http->params('httpClient');
+    my $response   = $http->params('response');
+    my $id         = $http->params('id');
 
-	$log->warn("error: $error");
+    $log->warn("error: $error");
 
-	_sendUnavailable($httpClient, $response);
+    _sendUnavailable($httpClient, $response);
 
-	delete $fetching{ $id };
+    delete $fetching{ $id };
 
-	_fetch();
+    _fetch();
 
-	return;
+    return;
 }
 
 sub _sendUnavailable {
-	my $httpClient = shift;
-	my $response   = shift;
+    my $httpClient = shift;
+    my $response   = shift;
 
-	if ($httpClient->connected) {
+    if ($httpClient->connected) {
 
-		$response->code(RC_SERVICE_UNAVAILABLE);
-		$response->header('Retry-After' => 10);
-		$response->content_length(0);
-		
-		Slim::Web::HTTP::addHTTPResponse($httpClient, $response, '', 1, 0);
-	}
+        $response->code(RC_SERVICE_UNAVAILABLE);
+        $response->header('Retry-After' => 10);
+        $response->content_length(0);
 
-	return;
+        Slim::Web::HTTP::addHTTPResponse($httpClient, $response, '', 1, 0);
+    }
+
+    return;
 }
 
 sub uri {
-	my ($client, $image) = @_;
+    my ($client, $image) = @_;
 
-	# Check if it's an squeezebox provided image
-	if ($image =~ /^\/html\/images\//) {
-		return $image;
-	}
+    # Check if it's an squeezebox provided image
+    if ($image =~ /^\/html\/images\//) {
+        return $image;
+    }
 
-	# Sometimes there is an https:// prefix. Remove it.
-	$image =~ s/^https?\:\/\///;
-	# Very often there is already a size spec from Google. Remove it also.
-	$image =~ s/\=(.*)$//;
+    # Sometimes there is an https:// prefix. Remove it.
+    $image =~ s/^https?\:\/\///;
+    # Very often there is already a size spec from Google. Remove it also.
+    $image =~ s/\=(.*)$//;
 
-	return "googlemusicimage/$image/image.jpg";
+    return "googlemusicimage/$image/image.jpg";
 }
 
 sub best {
-	my ($obj, $ref, $ref_array, $fallback) = @_;
+    my ($obj, $ref, $ref_array, $fallback) = @_;
 
-	my $image = $fallback;
-	if (exists $obj->{$ref}) {
-		$image = Plugins::GoogleMusic::Image->uri($obj->{$ref});
-	}
-	# eg. artistArtRefs is an array of images, one of which might have a 1:1 aspect ratio,
-	# so try that and fall back to eg. artistArtRef which is an aspect ratio crapshoot
-	if (exists $obj->{$ref_array}) {
-		for my $artRef (@{$obj->{$ref_array}}) {
-			if ($artRef->{aspectRatio} == 1) { 	
-				$image = Plugins::GoogleMusic::Image->uri($artRef->{url});
-			}
-		}
-	}
+    my $image = $fallback;
+    if (exists $obj->{$ref}) {
+        $image = Plugins::GoogleMusic::Image->uri($obj->{$ref});
+    }
+    # eg. artistArtRefs is an array of images, one of which might have a 1:1 aspect ratio,
+    # so try that and fall back to eg. artistArtRef which is an aspect ratio crapshoot
+    if (exists $obj->{$ref_array}) {
+        for my $artRef (@{$obj->{$ref_array}}) {
+            if ($artRef->{aspectRatio} == 1) {  
+                $image = Plugins::GoogleMusic::Image->uri($artRef->{url});
+            }
+        }
+    }
 
-	return $image;
+    return $image;
 }
 
 1;
