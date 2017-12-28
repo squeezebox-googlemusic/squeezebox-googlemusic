@@ -123,7 +123,7 @@ reports for issue #28 you will have to do the following:
    by running:
 
    ```
-   sudo pip install gmusicapi
+   sudo pip install gmusicapi==10.1.2
    ```
 
    **Important Note**: At the moment you will need the developer
