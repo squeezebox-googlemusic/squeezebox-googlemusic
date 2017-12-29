@@ -124,34 +124,6 @@ sub initPlugin {
         func  => \&searchInfoMenu,
     ) );
 
-    # Register this Plugin for smart mixes provided by the SmartMix
-    # plugin. Check if the SmartMix plugin is enabled and properly
-    # installed.
-    if ( Slim::Utils::PluginManager->isEnabled('Plugins::SmartMix::Plugin') ) {
-        eval {
-            require Plugins::SmartMix::Services;
-        };
-
-        if (!$@) {
-            main::INFOLOG && $log->info("SmartMix plugin is available - let's use it!");
-
-            # Smart mixes are supported for My Music and All Access
-            # separately. The user is able to enable/disable both
-            # features independently.
-            require Plugins::GoogleMusic::SmartMixMyMusic;
-            require Plugins::GoogleMusic::SmartMixAllAccess;
-
-            # Provide a version number to both modules. This is
-            # required for SmartMix services.
-            Plugins::GoogleMusic::SmartMixMyMusic->init($VERSION);
-            Plugins::GoogleMusic::SmartMixAllAccess->init($VERSION);
-
-            # Register both modules separately.
-            Plugins::SmartMix::Services->registerHandler('Plugins::GoogleMusic::SmartMixMyMusic', 'GoogleMusicMyMusic');
-            Plugins::SmartMix::Services->registerHandler('Plugins::GoogleMusic::SmartMixAllAccess', 'GoogleMusicAllAccess');
-        }
-    }
-
     return;
 }
 
