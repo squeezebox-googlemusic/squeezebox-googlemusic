@@ -28,8 +28,8 @@ library and the ability of inlining Python in Perl programs.
 
 ## Overview
 
-This is an fork of hechtus' googlemusic plugin for squeezebox
-[hechtus'](https://github.com/hechtus) which has ceased development.
+This is an fork of [hechtus'](https://github.com/hechtus/squeezebox-googlemusic)
+googlemusic plugin for squeezebox which has ceased development.
 
 ## Installation Requirements
 
