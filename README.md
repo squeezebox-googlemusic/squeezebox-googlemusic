@@ -16,8 +16,10 @@ library and the ability of inlining Python in Perl programs.
 ## Table of Contents
 
 1. [Overview](#overview)
+1. [Installation Requirements](#installation-requirements)
 1. [Installation](#installation)
     1. [Installation on macOS](#installation-on-macos)
+1. [Usage](#usage)
 1. [Dev Resources](#dev-resources)
     1. [Development setup (Deb-based Linux)](#development-setup-deb-based-linux)
 1. [Donate for this Plugin](#donate-for-this-plugin)
@@ -26,24 +28,27 @@ library and the ability of inlining Python in Perl programs.
 
 ## Overview
 
-This is an attempt to re-start development of the googlemusic plugin for
-squeezebox. [hechtus'](https://github.com/hechtus) excellent plugin has some problems
-with the latest API, and appears to have ceased development, so I've forked it
-into this organisation.
+This is an fork of hechtus' googlemusic plugin for squeezebox
+[hechtus'](https://github.com/hechtus) which has ceased development.
 
-At this point, I'm only really working on this if it's broken on my home
-installation. If anyone would like to contribute or lead this, please let me
-know - I won't have heaps of time, but I figure that if we have a number of
-people partially active, and a single starting point, then we might keep this
-thing rolling.
+## Installation Requirements
+
+* Logitech Media Server 7.8.0 or 7.9.1 or greater (some versions of 7.9.0
+  might work)
+  * Highly recommended to upgrade to one of the latest [nightly builds](http://downloads.slimdevices.com/nightly/) if possible
+* Python 2.7.x
+* A Google Account
+  * An App Password if you have 2-Step Verification enabled on your account
+    (see the [Usage](#usage) section below for more details)
 
 ## Installation
 
 This installation procedure will only work on Linux based systems. At
-the moment it is unknown if this works on Windows. If you
-want to install this plugin on macOS have a look at the [How-To below](#installation-on-macos).
+the moment it is unknown if this works on Windows (contributions to the wiki
+will be greatly appreciated). If you want to install this plugin on macOS have
+a look at the [Installation on macOS](#installation-on-macos) section below.
 Please let us know if you found a way to get this plugin running on non-Linux
-systems to extend this How-to.
+systems to extend this howto.
 
 1. You will need a Google account and some music and/or playlists in
    your library. If you want to use Google Music All Access features
@@ -54,23 +59,41 @@ systems to extend this How-to.
 1. Install [gmusicapi](https://github.com/simon-weber/gmusicapi)
    by running:
 
-   ```
-     sudo pip install gmusicapi==10.1.2
-   ```
+    ```
+    sudo pip install gmusicapi==10.1.2
+    ```
 
-1. To be able to build the Perl package Inline::Python (see below) you
-   will need the Python developer package. The name of the package and
-   the way how to install it depends on your Linux distribution. On
-   **Debian** based systems you will have to do:
+1. The Google Music plugin requires the perl modules Inline::Python and IO::Socket::SSL
+   to be installed. The following are instructions for installation on Debian
+   and Redhat-based distributions.
+1. If you're on a new enough version of Debian or Ubuntu, install the following
+   packages:
 
     ```
-         sudo apt-get install python-dev
+    sudo apt-get install libio-socket-ssl-perl libinline-python-perl
+    ```
+
+   If they aren't available, install `python-dev` then continue on to installing
+   the modules from cpan in the next step.
+
+    ```
+    sudo apt-get install python-dev
     ```
 
    On **redhat** systems do:
 
+   If you're on a new enough Redhat based system, install the following
+   packages:
+
     ```
-         sudo yum install python-devel
+    sudo yum install perl-IO-Socket-SSL perl-Inline-Python
+    ```
+
+   If they aren't available, install `python-devel` then continue on to installing
+   the modules from cpan in the next step.
+
+    ```
+    sudo yum install python-devel
     ```
 
 1. Install the Perl CPAN package
@@ -79,15 +102,17 @@ systems to extend this How-to.
    running:
 
     ```
-         sudo cpan App::cpanminus
-         sudo cpanm --notest Inline
-         sudo cpanm --notest Inline::Python
-         sudo cpanm --notest IO::Socket::SSL
+    sudo cpan App::cpanminus
+    sudo cpanm --notest Inline
+    sudo cpanm --notest Inline::Python
+    sudo cpanm --notest IO::Socket::SSL
     ```
 
 1. To install the plugin, add the repository URL
    [https://squeezebox-googlemusic.github.io/squeezebox-googlemusic/repository/repo.xml](https://squeezebox-googlemusic.github.io/squeezebox-googlemusic/repository/repo.xml)
    to your squeezebox plugin settings page.
+1. Save, restart the Logitech Media Server and continue on to the [usage](#usage)
+   section.
 
 ### Installation on macOS
 
@@ -148,9 +173,8 @@ reports for issue #28 you will have to do the following:
    Plugins page and insert the repository URL for this Plugin at the
    bottom of the page:
    [http://squeezebox-googlemusic.github.io/squeezebox-googlemusic/repository/repo.xml](http://squeezebox-googlemusic.github.io/squeezebox-googlemusic/repository/repo.xml)
-1. Save and restart the Logitech Media Server. Provide your All Access
-   information on the settings page.
-1. Enjoy!
+1. Save, restart the Logitech Media Server and continue on to the [usage](#usage)
+   section.
 
 ## Usage
 
