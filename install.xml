@@ -1,19 +1,19 @@
 <?xml version="1.0"?>
 <extension>
-	<name>PLUGIN_GOOGLEMUSIC</name>
-	<module>Plugins::GoogleMusic::Plugin</module>
-	<version>0.7.0</version>
-	<description>PLUGIN_GOOGLEMUSIC_DESC</description>
-	<creator>Victor Rajewski</creator>
-	<email>askvictor@gmail.com</email>
-	<defaultState>enabled</defaultState>
-	<homepageURL>https://github.com/squeezebox-googlemusic/squeezebox-googlemusic</homepageURL>
-	<icon>plugins/GoogleMusic/html/images/icon.png</icon>
-	<optionsURL>plugins/GoogleMusic/settings/basic.html</optionsURL>
-	<type>2</type>
-	<targetApplication>
-		<id>Logitech Media Server</id>
-		<minVersion>7.0a</minVersion>
-		<maxVersion>7+</maxVersion>
-	</targetApplication>
+    <name>PLUGIN_GOOGLEMUSIC</name>
+    <module>Plugins::GoogleMusic::Plugin</module>
+    <version>0.7.1</version>
+    <description>PLUGIN_GOOGLEMUSIC_DESC</description>
+    <creator>Victor Rajewski</creator>
+    <email>askvictor@gmail.com</email>
+    <defaultState>enabled</defaultState>
+    <homepageURL>https://github.com/squeezebox-googlemusic/squeezebox-googlemusic</homepageURL>
+    <icon>plugins/GoogleMusic/html/images/icon.png</icon>
+    <optionsURL>plugins/GoogleMusic/settings/basic.html</optionsURL>
+    <type>2</type>
+    <targetApplication>
+        <id>Logitech Media Server</id>
+        <minVersion>7.0a</minVersion>
+        <maxVersion>7+</maxVersion>
+    </targetApplication>
 </extension>
