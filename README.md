@@ -60,7 +60,7 @@ systems to extend this howto.
    by running:
 
     ```
-    sudo pip install gmusicapi==10.1.2
+    sudo pip install gmusicapi==12.1.0
     ```
 
 1. The Google Music plugin requires the perl modules Inline::Python and IO::Socket::SSL
@@ -148,16 +148,8 @@ reports for issue #28 you will have to do the following:
    by running:
 
    ```
-   sudo pip install gmusicapi==10.1.2
+   sudo pip install gmusicapi==12.1.0
    ```
-
-   **Important Note**: At the moment you will need the developer
-     version of gmusicapi. Install this version by doing:
-
-   ```
-   sudo pip install git+https://github.com/simon-weber/gmusicapi.git@develop
-   ```
-
 1. Install the Perl CPAN package
    [Inline](http://search.cpan.org/~ingy/Inline/) and
    [Inline::Python](http://search.cpan.org/~nine/Inline-Python/) by
@@ -220,7 +212,7 @@ reports for issue #28 you will have to do the following:
    depending on your installed python version, you might have to use pip
 
     ```
-    sudo pip2 install gmusicapi==10.1.2
+    sudo pip2 install gmusicapi==12.1.0
     sudo apt-get install python-dev
     sudo apt-get install libio-socket-ssl-perl
     sudo cpan App::cpanminus
