@@ -54,13 +54,13 @@ systems to extend this howto.
    your library. If you want to use Google Music All Access features
    you will need a subscription to this service.
 
-1. Install Python and [Python pip](http://www.pip-installer.org).
+1. Install Python 2.7 (usually installed on Linux systems by default) and [Python pip](http://www.pip-installer.org).
 
-1. Install [gmusicapi](https://github.com/simon-weber/gmusicapi)
+1. Install [gmusicapi](https://github.com/simon-weber/gmusicapi) for Python 2
    by running:
 
     ```
-    sudo pip install gmusicapi==12.1.0
+    sudo pip2 install gmusicapi==12.1.0
     ```
 
 1. The Google Music plugin requires the perl modules Inline::Python and IO::Socket::SSL
