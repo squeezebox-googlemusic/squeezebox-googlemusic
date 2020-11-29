@@ -1,6 +1,16 @@
+
+## Google Music has been shut down; this software no longer has any purpose. R.I.P. 
+
+Alternatives include 
+* [Spotify](https://forums.slimdevices.com/showthread.php?112962-Announce-Spotty-4-4-more-personalised-content)
+* [Tidal](https://forums.slimdevices.com/showthread.php?109053-Best-way-to-use-Tidal-service-on-Squeezebox)
+* [Youtube](https://forums.slimdevices.com/showthread.php?105840-ANNOUNCE-YouTube-Plugin-(API-v3))
+
+
+
 <img src="./HTML/EN/plugins/GoogleMusic/html/images/icon.png" align="left" width="144px" height="144px"/>
 
-# squeezebox-googlemusic
+# ~~squeezebox-googlemusic~~
 
 [![](https://img.shields.io/travis/squeezebox-googlemusic/squeezebox-googlemusic.svg)](https://travis-ci.org/squeezebox-googlemusic/squeezebox-googlemusic)
 ![](https://img.shields.io/github/release/squeezebox-googlemusic/squeezebox-googlemusic.svg)
